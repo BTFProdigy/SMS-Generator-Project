@@ -5,6 +5,12 @@ public class VerbNounFrequency implements Comparable<VerbNounFrequency>{
     private String noun;
     private int freq;
 
+    public VerbNounFrequency(){
+        this.verb = "";
+        this.noun = "";
+        this.freq = 0;
+    };
+
     public VerbNounFrequency(String verb, String noun){
       this.verb = verb;
       this.noun = noun;
