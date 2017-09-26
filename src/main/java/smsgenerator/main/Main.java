@@ -6,10 +6,8 @@ import yusufs.nlp.nerid.utils.TextSequence.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import smsgenerator.module.VerbNounFrequency;
 
@@ -43,8 +41,6 @@ public class Main {
             String sentence_to_predict = line;
             ArrayList<Sentence> predicted = iner.predictWithEmbeddedModel(sentence_to_predict, true);
 
-            ArrayList<String> NounList = new ArrayList<>();
-            ArrayList<String> VerbList = new ArrayList<>();
             String sentence_subject_to_predict = "";
             String subject = "";
             String verb = "";
@@ -53,7 +49,9 @@ public class Main {
                     String current_word = word.getToken();  // kata yang diprediksi
                     String current_Ner_label = word.getXmlTag(); // hasil prediksi label entitas untuk kata tersebut
                     String current_label_pos = word.getPosTag(); // postag dari kata tersebut
-//                    System.out.printf("%s %s %s\n", current_word, current_Ner_label, current_label_pos);
+                    // System.out.printf("%s %s %s\n", current_word, current_Ner_label, current_label_pos);
+
+                    // Ambil Verb
                     if (current_label_pos.contains("VB")){
                         verb = current_word;
 
@@ -96,6 +94,8 @@ public class Main {
                 }
             }
         }
+
+        // Sort dan print output
         Collections.sort(list_of_verb_noun);
         System.out.printf("--RESULT----\n");
         for (VerbNounFrequency v : list_of_verb_noun){
