@@ -55,6 +55,6 @@ public class VerbNounFrequency implements Comparable<VerbNounFrequency>{
     }
 
     public void print(){
-        System.out.printf("Verb : %s, Noun : %s, Frequency : %d\n", this.verb, this.noun, this.freq);
+        System.out.printf("Verb : %s, Subject : %s, Frequency : %d\n", this.verb, this.noun, this.freq);
     }
 }

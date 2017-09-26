@@ -6,11 +6,14 @@ import yusufs.nlp.nerid.utils.TextSequence.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import smsgenerator.module.VerbNounFrequency;
+
+// Asumsi : Subjek adalah kumpulan kata sebelum Verb
 
 public class Main {
 
@@ -40,37 +43,56 @@ public class Main {
             String sentence_to_predict = line;
             ArrayList<Sentence> predicted = iner.predictWithEmbeddedModel(sentence_to_predict, true);
 
-            String previous_label_pos = "";
-            String previous_word = "";
+            ArrayList<String> NounList = new ArrayList<>();
+            ArrayList<String> VerbList = new ArrayList<>();
+            String sentence_subject_to_predict = "";
+            String subject = "";
+            String verb = "";
             for (Sentence arrWords : predicted) {
                 for (Words word : arrWords.getWords()) {
                     String current_word = word.getToken();  // kata yang diprediksi
                     String current_Ner_label = word.getXmlTag(); // hasil prediksi label entitas untuk kata tersebut
                     String current_label_pos = word.getPosTag(); // postag dari kata tersebut
+//                    System.out.printf("%s %s %s\n", current_word, current_Ner_label, current_label_pos);
+                    if (current_label_pos.contains("VB")){
+                        verb = current_word;
 
-                    if (previous_label_pos.contains("VB") && current_label_pos.contains("NN")) {
-                        boolean add_freq = false;
-                        //                    Check wheter the verb already inserted
-                        for (VerbNounFrequency el : list_of_verb_noun) {
-                            if ((el.getVerb() == previous_word) && (el.getNoun() == current_word)) {
-                                el.add_frequency();
-                                add_freq = true;
-                                break;
+                        // Analisis Subjek
+                        ArrayList<Sentence> subject_predict = iner.predictWithEmbeddedModel(sentence_subject_to_predict, true);
+                        for (Sentence arrWords1 : subject_predict){
+                            for(Words word1: arrWords1.getWords()){
+                                String current_word1 = word1.getToken();
+                                String current_Ner_label1 = word.getXmlTag();
+                                String current_label_pos1 = word1.getPosTag();
+
+                                // Ambil Noun
+                                if (current_label_pos1.contains("NN")){
+                                    subject += " " + current_word1;
+                                }
                             }
                         }
-                        if (!add_freq) {
-                            list_of_verb_noun.add(new VerbNounFrequency(previous_word, current_word));
+
+                        // Masukkan Subjek dan Verb yang telah dianalisis
+                        Boolean added = false;
+                        for (VerbNounFrequency el: list_of_verb_noun){
+                            if (el.getNoun().contains(subject) && el.getVerb() == verb){
+                                el.add_frequency();
+                                added = true;
+                            }
                         }
+                        if (!added){
+                            list_of_verb_noun.add(new VerbNounFrequency(verb, subject));
+                        }
+
+                        // Empty variable
+                        sentence_subject_to_predict = "";
+                        subject = "";
+                        verb = "";
                     }
-                    //                Add Subject Noun if found
-                    //                if (current_label_pos.contains("NNAC")){
-                    //                    VerbNounFrequency el = new VerbNounFrequency();
-                    //                    el.setNoun(current_word);
-                    //                }
-                    //                Add to previous POS TAG and Words
-                    previous_label_pos = current_label_pos;
-                    previous_word = current_word;
-                    System.out.println(current_word + " " + current_Ner_label + " " + current_label_pos);
+                    else{
+                        current_word = " " + current_word;
+                        sentence_subject_to_predict += current_word;
+                    }
                 }
             }
         }
