@@ -6,10 +6,7 @@ import yusufs.nlp.nerid.utils.TextSequence.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import smsgenerator.module.VerbNounFrequency;
 
@@ -89,9 +86,15 @@ public class Main {
                 }
             }
         }
-        
+
         // Sort dan print output
-        Collections.sort(list_of_verb_noun);
+        Collections.sort(list_of_verb_noun, new Comparator<VerbNounFrequency>() {
+            @Override
+            public int compare(VerbNounFrequency o1, VerbNounFrequency o2) {
+                return o2.getFreqTotal().compareTo(o1.getFreqTotal());
+            }
+        });
+
         System.out.printf("--RESULT----\n");
         for (VerbNounFrequency v : list_of_verb_noun){
             v.print();

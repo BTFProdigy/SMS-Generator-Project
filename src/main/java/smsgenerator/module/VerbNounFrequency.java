@@ -61,29 +61,15 @@ public class VerbNounFrequency implements Comparable<VerbNounFrequency>{
         this.freqs = freq;
     }
 
-    public int compareTo(VerbNounFrequency o) {
-        //Calculate total freq and do comparison
-        int curr_freq = 0;
-        int comp_freq = 0;
+    public Integer getFreqTotal(){
+        int result = 0;
         for (int freq : this.freqs){
-            curr_freq += freq;
+            result += freq;
         }
-        for (int freq : o.getFreqs()){
-            comp_freq += freq;
-        }
-        if (curr_freq > comp_freq){
-            return 1;
-        }
-        else {
-            return 0;
-        }
+        return result;
     }
 
-    public void print(){
-        System.out.printf("Verb : %s\n", this.verb);
-        System.out.printf("Noun : \n");
-        for (int i = 0; i < this.getNouns().size(); i++){
-            System.out.printf("\t %s, Freq : %d\n", this.getNouns().get(i), this.getFreqs().get(i));
-        }
+    public int compareTo(VerbNounFrequency o) {
+        return this.getFreqTotal().compareTo(o.getFreqTotal());
     }
 }
