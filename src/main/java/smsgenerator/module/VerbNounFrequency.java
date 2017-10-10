@@ -2,7 +2,7 @@ package smsgenerator.module;
 
 import java.util.ArrayList;
 
-public class VerbNounFrequency implements Comparable<VerbNounFrequency>{
+public class VerbNounFrequency{
     private String verb;
     private ArrayList<String> nouns;
     private ArrayList<Integer> freqs;
@@ -69,7 +69,23 @@ public class VerbNounFrequency implements Comparable<VerbNounFrequency>{
         return result;
     }
 
-    public int compareTo(VerbNounFrequency o) {
-        return this.getFreqTotal().compareTo(o.getFreqTotal());
+    public void print(){
+        System.out.printf("Verb : %s\n", this.verb);
+        System.out.printf("Noun : \n");
+        for (int i = 0; i < this.getNouns().size(); i++){
+            System.out.printf("\t %s, Freq : %d\n", this.getNouns().get(i), this.getFreqs().get(i));
+        }
+        System.out.printf("Freq Total : %d\n", this.getFreqTotal());
+    }
+
+    public String toString(){
+        StringBuilder result = new StringBuilder();
+        result.append("Verb :"+this.verb+"\n");
+        result.append("Noun :"+"\n");
+        for (int i = 0; i < this.getNouns().size(); i++){
+            result.append("\t"+this.getNouns().get(i)+", Freq : "+this.getFreqs().get(i).toString()+"\n");
+        }
+        result.append("Freq total : "+this.getFreqTotal().toString());
+        return result.toString();
     }
 }

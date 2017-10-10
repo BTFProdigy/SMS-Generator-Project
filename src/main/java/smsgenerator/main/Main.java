@@ -3,9 +3,7 @@ package smsgenerator.main;
 import yusufs.nlp.nerid.IndonesiaNER;
 import yusufs.nlp.nerid.utils.TextSequence.*;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import smsgenerator.module.VerbNounFrequency;
@@ -30,7 +28,7 @@ public class Main {
         return output;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         String path = "./input/input.txt";
         IndonesiaNER iner = new IndonesiaNER(IndonesiaNER.MODEL.YUSUFS);
         ArrayList<String> lines = ReadFile(path);
@@ -98,6 +96,12 @@ public class Main {
         System.out.printf("--RESULT----\n");
         for (VerbNounFrequency v : list_of_verb_noun){
             v.print();
+        }
+
+        // Write to output
+        PrintWriter out = new PrintWriter("./output/output.txt");
+        for (VerbNounFrequency v : list_of_verb_noun){
+            out.println(v.toString());
         }
     }
 };
