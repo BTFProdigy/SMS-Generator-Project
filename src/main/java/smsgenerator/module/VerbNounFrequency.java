@@ -1,52 +1,77 @@
 package smsgenerator.module;
 
+import java.util.ArrayList;
+
 public class VerbNounFrequency implements Comparable<VerbNounFrequency>{
     private String verb;
-    private String noun;
-    private int freq;
+    private ArrayList<String> nouns;
+    private ArrayList<Integer> freqs;
 
     public VerbNounFrequency(){
         this.verb = "";
-        this.noun = "";
-        this.freq = 0;
-    };
+        this.nouns = new ArrayList<String>();
+        this.freqs = new ArrayList<Integer>();
+    }
 
     public VerbNounFrequency(String verb, String noun){
       this.verb = verb;
-      this.noun = noun;
-      this.freq = 1;
-    };
+      this.nouns = new ArrayList<String>();
+      this.freqs = new ArrayList<Integer>();
+      this.nouns.add(noun);
+      this.freqs.add(1);
+    }
 
-    public void add_frequency(){
-        this.freq += 1;
+    public void add_noun(String noun){
+        Integer idx = this.getNouns().indexOf(noun);
+        if (idx != -1){
+            this.freqs.set(idx, this.freqs.get(idx) + 1);
+        }
+        else{
+            this.nouns.add(noun);
+            this.freqs.add(1);
+        }
+    }
+
+    public void add_frequency(int i){
+        int curr_val = this.freqs.get(i);
+        this.freqs.set(i,  curr_val += 1);
     }
 
     public String getVerb() {
         return verb;
     }
 
-    public void setVerb(String verb) {
+    public void setVerbs(String verb) {
         this.verb = verb;
     }
 
-    public String getNoun() {
-        return noun;
+    public ArrayList<String> getNouns() {
+        return nouns;
     }
 
-    public void setNoun(String noun) {
-        this.noun = noun;
+    public void setNouns(ArrayList<String> noun) {
+        this.nouns = noun;
     }
 
-    public int getFreq() {
-        return freq;
+    public ArrayList<Integer> getFreqs() {
+        return freqs;
     }
 
-    public void setFreq(int freq) {
-        this.freq = freq;
+    public void setFreqs(ArrayList<Integer> freq) {
+        this.freqs = freq;
     }
 
     public int compareTo(VerbNounFrequency o) {
-        if (this.freq > o.getFreq()){
+        //Calculate total freq and do comparison
+        int curr_freq = 0;
+        int comp_freq = 0;
+        for (int freq : this.freqs){
+            curr_freq += freq;
+        }
+        for (int freq : o.getFreqs()){
+            comp_freq += freq;
+        }
+        if (curr_freq > comp_freq){
             return 1;
         }
         else {
@@ -55,6 +80,10 @@ public class VerbNounFrequency implements Comparable<VerbNounFrequency>{
     }
 
     public void print(){
-        System.out.printf("Verb : %s, Subject : %s, Frequency : %d\n", this.verb, this.noun, this.freq);
+        System.out.printf("Verb : %s\n", this.verb);
+        System.out.printf("Noun : \n");
+        for (int i = 0; i < this.getNouns().size(); i++){
+            System.out.printf("\t %s, Freq : %d\n", this.getNouns().get(i), this.getFreqs().get(i));
+        }
     }
 }

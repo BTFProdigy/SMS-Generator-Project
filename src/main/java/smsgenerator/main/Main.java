@@ -8,6 +8,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import smsgenerator.module.VerbNounFrequency;
 
@@ -65,27 +67,20 @@ public class Main {
 
                                 // Ambil Noun
                                 if (current_label_pos1.contains("NN")){
-                                    subject += " " + current_word1;
+                                    // Masukkan Subjek dan Verb yang telah dianalisis
+                                    Boolean added = false;
+                                    for (VerbNounFrequency el: list_of_verb_noun){
+                                        if (el.getVerb() == verb){
+                                            el.add_noun(current_word1);
+                                            added = true;
+                                        }
+                                    }
+                                    if (!added){
+                                        list_of_verb_noun.add(new VerbNounFrequency(verb, current_word1));
+                                    }
                                 }
                             }
                         }
-
-                        // Masukkan Subjek dan Verb yang telah dianalisis
-                        Boolean added = false;
-                        for (VerbNounFrequency el: list_of_verb_noun){
-                            if (el.getNoun().contains(subject) && el.getVerb() == verb){
-                                el.add_frequency();
-                                added = true;
-                            }
-                        }
-                        if (!added){
-                            list_of_verb_noun.add(new VerbNounFrequency(verb, subject));
-                        }
-
-                        // Empty variable
-                        sentence_subject_to_predict = "";
-                        subject = "";
-                        verb = "";
                     }
                     else{
                         current_word = " " + current_word;
@@ -94,7 +89,7 @@ public class Main {
                 }
             }
         }
-
+        
         // Sort dan print output
         Collections.sort(list_of_verb_noun);
         System.out.printf("--RESULT----\n");
