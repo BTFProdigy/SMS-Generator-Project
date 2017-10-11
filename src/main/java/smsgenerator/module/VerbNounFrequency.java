@@ -69,9 +69,14 @@ public class VerbNounFrequency{
         return result;
     }
 
+    public Integer getTotalNoun(){
+        return this.nouns.size();
+    }
+
     public void print(){
         System.out.printf("Verb : %s\n", this.verb);
         System.out.printf("Noun : \n");
+        System.out.printf("Noun Total : %s\n", this.getTotalNoun().toString());
         for (int i = 0; i < this.getNouns().size(); i++){
             System.out.printf("\t %s, Freq : %d\n", this.getNouns().get(i), this.getFreqs().get(i));
         }
@@ -81,11 +86,12 @@ public class VerbNounFrequency{
     public String toString(){
         StringBuilder result = new StringBuilder();
         result.append("Verb :"+this.verb+"\n");
+        result.append("Noun Total : "+this.getTotalNoun().toString()+"\n");
+        result.append("Noun Freq total : "+this.getFreqTotal().toString()+"\n");
         result.append("Noun :"+"\n");
         for (int i = 0; i < this.getNouns().size(); i++){
             result.append("\t"+this.getNouns().get(i)+", Freq : "+this.getFreqs().get(i).toString()+"\n");
         }
-        result.append("Freq total : "+this.getFreqTotal().toString());
         return result.toString();
     }
 }
